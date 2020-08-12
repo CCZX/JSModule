@@ -22,4 +22,31 @@ require(['moduleA', 'moduleB'], function(moduleA, moduleB) {
  // do...
 })
 ```
+`require`的第一个参数表示依赖的模块数组，当模块加载完成后就会执行后面的回调函数。加载模块的会按照加载顺序作为参数传入回调函数。
 
+4. require config
+
+```js
+require.config({
+  baseUrl: '',
+  paths: {
+    moduleA: './path/moduleA',
+    moduleB: './path/moduleB'
+  }
+})
+```
+使用`require.config`可以对加载模块进行一些相关的配置。
+
+5. 定义模块
+
+```js
+define(function() {
+  const add = (x, y) => {
+    return x + y
+  }
+  return {
+    add
+  }
+})
+```
+定义模块使用`define`函数，接收一个回调函数，回调函数的返回值就是模块的导出值。
