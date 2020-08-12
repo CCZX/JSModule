@@ -4,6 +4,7 @@
   const modules = {}
   const requires = {}
   const loadModules = [] // 已经加载完成的module
+  const defaultExtenstion = '.js'
 
   function init() {
     // todo：加载data-main
@@ -57,9 +58,8 @@
     const scriptNode = document.createElement('script')
     scriptNode.type = "text/javascript"
     scriptNode.charset = 'utf-8'
-    scriptNode.setAttribute('data-requiremodule', dep)
     scriptNode.async = true
-    document.body.appendChild(scriptNode)
+    document.head.appendChild(scriptNode)
     scriptNode.addEventListener('load', (e) => {
       moudleLoaded(dep, id, e)
     })
@@ -100,6 +100,7 @@
 
   global.define = define
   global.require = require
+  // todo：删除下面代码，现在为了方便在浏览器查看
   global.modules = modules
   global.requires = requires
 })(window)
