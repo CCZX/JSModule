@@ -23,7 +23,21 @@
 
   function init() {
     // todo：加载data-main
+    const allScriptDOM = [...document.querySelectorAll('script')]
+    for (let i = 0; i < allScriptDOM.length; i++) {
+      const entry = allScriptDOM[i].getAttribute('data-main')
+      if (entry) {
+        const script = document.createElement('script')
+        script.type = "text/javascript"
+        script.charset = 'utf-8'
+        script.src = entry
+        document.head.appendChild(script)
+        break
+      }
+    }
+    // console.error('no has data-main attribute script')
   }
+  init()
 
   /**
    * 
