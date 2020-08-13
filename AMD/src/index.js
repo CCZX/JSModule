@@ -1,8 +1,23 @@
 (function (global) {
-  let moduleId = 0
   let requireId = 0
-  const modules = {}
-  const requires = {}
+  const modules = {
+    /**
+     * moduleA: {
+     *  export: any, // 模块导出值
+     *  watcher: string[], // require该模块的文件
+     *  load: boolean, // 以及加载完毕，即script标签loaded
+     * }
+     */
+  }
+  const requires = {
+    /**
+     * requireId: {
+     *  requireId: string, // 使用require文件的id，会被push到modules的watchers中
+     *  depModules: string[], // 依赖的模块，使用require方法的第一参数，其依赖的模块名称要和define中定义的名称一致
+     *  cb: function, // 模块加载完成后执行的回调函数，函数参数依次是依次加载的模块的返回值
+     * }
+     */
+  }
   const loadModules = [] // 已经加载完成的module
   const defaultExtenstion = '.js'
 
@@ -16,11 +31,6 @@
    * @param {Function} cb 
    */
   function define(moduleName, cb) {
-    // modules[moduleName] = {
-    //   export: cb(),
-    //   // watchers: modules[moduleName].watchers || [], // require此模块的文件，传入requireId表示
-    //   // loaded:  false // script标签加载完成置为true
-    // }
     // console.log('do define')
     modules[moduleName].export = cb()
   }
@@ -40,33 +50,48 @@
       }
       depModules.forEach(depModuleItem => {
         if (!modules[depModuleItem]) {
-          setScript(depModuleItem, requireId)
+          setDepModuleScript(depModuleItem, requireId)
         } else {
           modules[depModuleItem].watchers.push(requireId)
         }
       })
       requireId++ // 为下一个require做准备
-    }, 1000 / 60)
+    }, 0)
   }
 
   require.config = {
+    baseURL: '',
     paths: {}
   }
 
-  function setScript(dep, id) {
-    // console.log({dep, id})
+  /**
+   * main.js文件require了a.js文件，那么main.js文件dep就包括a.js
+   * @param {string} moduleName 
+   * @param {*} id 
+   */
+  function setDepModuleScript(moduleName, id) {
+    // console.log({moduleName, id})
     const scriptNode = document.createElement('script')
     scriptNode.type = "text/javascript"
     scriptNode.charset = 'utf-8'
     scriptNode.async = true
     document.head.appendChild(scriptNode)
     scriptNode.addEventListener('load', (e) => {
-      moudleLoaded(dep, id, e)
+      moudleLoaded(moduleName, id, e)
     })
-    scriptNode.src = require.config.paths[dep] || `./${dep}.js`
-    modules[dep] = modules[dep] || {}
-    modules[dep].watchers = []
-    modules[dep].watchers.push(id)
+    scriptNode.src = require.config.paths[moduleName] || `./${moduleName}.js`
+    modules[moduleName] = modules[moduleName] || {}
+    modules[moduleName].watchers = []
+    modules[moduleName].watchers.push(id)
+  }
+
+  /**
+   * 
+   * @param {string} moduleName 这里的moduleName是自己在使用define模块时定义的名称
+   */
+  function setPath(moduleName) {
+    const { baseURL, paths } = require.config
+    const filePath = paths[moduleName] || `${moduleName}`
   }
 
   /**
@@ -75,7 +100,7 @@
   function moudleLoaded(module) {
     console.log(modules, modules[module])
     /**
-     * 当前模块加载完成后，遍历其watcher执行watcher的回调函数
+     * 当前模块加载完成后，遍历其watcher（也就是require该模块的文件）执行watcher的回调函数
      */
     modules[module].load = true
     modules[module].watchers.forEach(/**watcherItem对应着requireId */ watcherItem => {
