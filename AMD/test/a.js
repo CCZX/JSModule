@@ -1,4 +1,4 @@
-define('a', function() {
+define('a', [], function() {
   return {
     a: 'this is a module'
   }
