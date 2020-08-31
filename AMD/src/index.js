@@ -1,3 +1,11 @@
+/**
+ * feature
+ * 1. data-main，定义data-main作为入口函数加载入口文件
+ * 2. define，使用define传入回调函数定义模块的导出值（未实现define的时候加载依赖模块）
+ * 3. require，使用require加载模块，支持加载多个模块
+ * 4. asynchronous，require使用异步加载的方式，使用的setTimeout实现
+ */
+
 (function (global) {
   let requireId = 0
   const modules = {
@@ -21,6 +29,9 @@
   const loadModules = [] // 已经加载完成的module
   const defaultExtenstion = '.js'
 
+  /**
+   * 入口，加载data-main
+   */
   function init() {
     // todo：加载data-main
     const allScriptDOM = [...document.querySelectorAll('script')]
