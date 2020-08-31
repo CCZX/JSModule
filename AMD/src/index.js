@@ -53,12 +53,16 @@
   /**
    * 
    * @param {string} moduleName 定义模块的名字
+   * @param {string[]} deps 依赖的模块
    * @param {Function} cb 
    */
-  function define(moduleName, cb) {
+  function define(moduleName, deps, cb) {
     // console.log('do define')
     modules[moduleName].export = cb()
   }
+
+  // 规范定义，第三方库有如下判断："function"==typeof define && define.amd && define()
+  define.amd = true
 
   /**
    * 
@@ -95,6 +99,7 @@
    * @param {*} id 
    */
   function setDepModuleScript(moduleName, id) {
+    // debugger
     // console.log({moduleName, id})
     const scriptNode = document.createElement('script')
     scriptNode.type = "text/javascript"
@@ -123,7 +128,6 @@
    * 这里实际上是真正的require，需要require的模块已经加载完毕
    */
   function moudleLoaded(module) {
-    console.log(modules, modules[module])
     /**
      * 当前模块加载完成后，遍历其watcher（也就是require该模块的文件）执行watcher的回调函数
      */
