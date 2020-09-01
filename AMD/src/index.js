@@ -4,6 +4,7 @@
  * 2. define，使用define传入回调函数定义模块的导出值（未实现define的时候加载依赖模块）
  * 3. require，使用require加载模块，支持加载多个模块
  * 4. asynchronous，require使用异步加载的方式，使用的setTimeout实现
+ * 5. 加载第三方符合AMD规范的模块
  */
 
 (function (global) {
