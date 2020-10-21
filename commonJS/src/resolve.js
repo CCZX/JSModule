@@ -5,5 +5,6 @@
 // console.log(require.resolve.paths)
 
 const path = require.resolve('./foo.js')
+const foo = require('./foo')
 
 console.log(path)
