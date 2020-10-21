@@ -125,7 +125,7 @@ const exports = module.exports
 
 通过对加载过程的打断点可以发现，模块的在输出过程中调用了如下方法：
 
-<img src="/Users/chenchao/Desktop/pictures/markdown/debug.jpg" style="zoom:40%;" />
+<img src="./static/debug.jpg" style="zoom:40%;" />
 
 1. `Module._compile`
 2. `Module.extesions..js`
