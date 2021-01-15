@@ -51,3 +51,16 @@ define(function() {
 })
 ```
 定义模块使用`define`函数，接收一个回调函数，回调函数的返回值就是模块的导出值。
+
+**定义模块时还可以使用一个数组来指定依赖的其他模块：**
+
+```js
+define(['./modA.js', './modB.js'], function(modA, modB) {
+  const add = (x, y) => {
+    return x + y
+  }
+  return {
+    add
+  }
+})
+```
